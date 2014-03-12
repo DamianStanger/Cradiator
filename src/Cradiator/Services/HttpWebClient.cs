@@ -14,6 +14,7 @@ namespace Cradiator.Services
 
 		public string DownloadString(string url)
 		{
+            _webClient.Credentials = new NetworkCredential("goagent", "password");
 			return _webClient.DownloadString(new Uri(url));
 		}
 	}

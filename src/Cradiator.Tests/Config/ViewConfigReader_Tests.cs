@@ -16,7 +16,13 @@ namespace Cradiator.Tests.Config
                                     @"<view url=""http://url1"" " +
                                         @"skin=""Grid"" " +
                                         @"project-regex=""v5.*"" " +
-                                        @"category-regex="".*""/>"" " +
+                                        @"category-regex="".*"" " +
+                                        @"server-regex="".*"" " +
+                                        @"name=""Scoring"" " +
+                                        @"showOnlyBroken=""false"" " +
+                                        @"showServerName=""false"" " +
+                                        @"showOutOfDate=""false"" " +
+                                        @"outOfDateDifferenceInMinutes=""0"" />" +
                                 "</views>" +
                             "</configuration>";
 
@@ -50,6 +56,12 @@ namespace Cradiator.Tests.Config
                                 ProjectNameRegEx = "[a-z]",  
                                 CategoryRegEx = "[1-9]",  
                                 SkinName = "StackPhoto",  
+                                ServerNameRegEx = "",
+                                OutOfDateDifferenceInMinutes = 1,
+                                ShowOnlyBroken = true,
+                                ShowOutOfDate = true,
+                                ShowServerName = true,
+                                ViewName = "foobar"
                               });
 
             _parser = new ViewSettingsParser(new StringReader(xmlModified));

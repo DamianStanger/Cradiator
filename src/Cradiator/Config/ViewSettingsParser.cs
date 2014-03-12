@@ -40,23 +40,37 @@ namespace Cradiator.Config
 
         public ICollection<ViewSettings> ParseXml()
         {
-            return new ReadOnlyCollection<ViewSettings>(
-                (from view in _xdoc.Elements("configuration")
-                                   .Elements("views")
-                                   .Elements("view")
-                 select new ViewSettings
-                            {   
-                                URL = view.Attribute(Url).Value,
-                                ProjectNameRegEx = view.Attribute(ProjectRegex).Value,
-                                CategoryRegEx = view.Attribute(CategoryRegex).Value,
-                                ServerNameRegEx = view.Attribute(ServerRegex).Value,
-                                SkinName = view.Attribute(Skin).Value,
-                                ViewName = view.Attribute(ViewName).Value,
-                                ShowOnlyBroken = bool.Parse(view.Attribute(ShowOnlyBroken).Value),
-                                ShowServerName = bool.Parse(view.Attribute(ShowServerName).Value),
-                                ShowOutOfDate = bool.Parse(view.Attribute(ShowOutOfDate).Value),
-                                OutOfDateDifferenceInMinutes = int.Parse(view.Attribute(OutOfDateDifferenceInMinutes).Value)
-                            }).ToList());
+            var xElements = _xdoc.Elements("configuration").Elements("views").Elements("view");
+            var viewSettingses = new Collection<ViewSettings>();
+            foreach (var element in xElements)
+            {
+                var outOfDateDifferenceInMinutes = int.Parse(element.Attribute(OutOfDateDifferenceInMinutes).Value);
+                var showOutOfDate = bool.Parse(element.Attribute(ShowOutOfDate).Value);
+                var showServerName = bool.Parse(element.Attribute(ShowServerName).Value);
+                var showOnlyBroken = bool.Parse(element.Attribute(ShowOnlyBroken).Value);
+                var viewName = element.Attribute(ViewName).Value;
+                var skinName = element.Attribute(Skin).Value;
+                var serverNameRegEx = element.Attribute(ServerRegex).Value;
+                var categoryRegEx = element.Attribute(CategoryRegex).Value;
+                var projectNameRegEx = element.Attribute(ProjectRegex).Value;
+                var url = element.Attribute(Url).Value;
+                var viewSettings = new ViewSettings
+                {
+                    URL = url,
+                    ProjectNameRegEx = projectNameRegEx,
+                    CategoryRegEx = categoryRegEx,
+                    ServerNameRegEx = serverNameRegEx,
+                    SkinName = skinName,
+                    ViewName = viewName,
+                    ShowOnlyBroken = showOnlyBroken,
+                    ShowServerName = showServerName,
+                    ShowOutOfDate = showOutOfDate,
+                    OutOfDateDifferenceInMinutes = outOfDateDifferenceInMinutes
+                };
+                viewSettingses.Add(viewSettings);
+            }
+
+            return new ReadOnlyCollection<ViewSettings>(viewSettingses);
         }
 
         //-----

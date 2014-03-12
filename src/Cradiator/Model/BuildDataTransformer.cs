@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -26,27 +27,38 @@ namespace Cradiator.Model
             if (xml.IsEmpty()) return new List<ProjectStatus>();
 
             // caters for ccNet v1.5 new xml format for CurrentMessage (messages/message)
-            var query = (from p in
-                             (from project in XDocument.Parse(xml.Replace('\n', ' ').Trim())
-                               .Elements("Projects")
-                               .Elements("Project")
+            var xElements = XDocument.Parse(xml.Replace('\n', ' ').Trim())
+                .Elements("Projects")
+                .Elements("Project");
 
-                              let name = project.Attribute("name").GetValue()
-                              let category = project.Attribute("category").GetValue()
-                              let serverName = project.Attribute("serverName").GetValue()
+            var projectStatuses = new Collection<ProjectStatus>();
+            foreach (var project in xElements)
+            {
+                var name = project.Attribute("name").GetValue();
+                var category = project.Attribute("category").GetValue();
+                var serverName = project.Attribute("serverName").GetValue();
 
-                              where _projectNameRegEx.Match(name).Success
-                              where _categoryRegEx.Match(category).Success
-                              where _serverNameRegEx.Match(serverName).Success
+                if(!_projectNameRegEx.Match(name).Success ||
+                   !_categoryRegEx.Match(category).Success ||
+                   !_serverNameRegEx.Match(serverName).Success) continue;
 
-                              select new ProjectStatus(name)
-                              {
-                                  CurrentMessage = project.Attribute("CurrentMessage").GetValue(),
-                                  LastBuildStatus = project.Attribute("lastBuildStatus").GetValue(),
-                                  ProjectActivity = new ProjectActivity(project.Attribute("activity").GetValue()),
-                                  ServerName = project.Attribute("serverName").GetValue(),
-                                  LastBuildTime = System.Xml.XmlConvert.ToDateTime(project.Attribute("lastBuildTime").GetValue(), System.Xml.XmlDateTimeSerializationMode.Local)
-                              })
+                var currentMessage = project.Attribute("CurrentMessage").GetValue();
+                var lastBuildStatus = project.Attribute("lastBuildStatus").GetValue();
+                var projectActivity = new ProjectActivity(project.Attribute("activity").GetValue());
+                var lastBuildTime = System.Xml.XmlConvert.ToDateTime(project.Attribute("lastBuildTime").GetValue(), System.Xml.XmlDateTimeSerializationMode.Local);
+
+                projectStatuses.Add(new ProjectStatus(name)
+                {
+                    CurrentMessage = currentMessage,
+                    LastBuildStatus = lastBuildStatus,
+                    ProjectActivity = projectActivity,
+                    ServerName = serverName,
+                    LastBuildTime =
+                        lastBuildTime
+                });
+            }
+
+            var query = (from p in projectStatuses
                          
                          join m in
                              (from message in XDocument.Parse(xml)

@@ -1,11 +1,20 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cradiator", "src\Cradiator\Cradiator.csproj", "{4CC715FF-1B56-46BA-AD68-ECB5E1B5CDDA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cradiator.Tests", "src\Cradiator.Tests\Cradiator.Tests.csproj", "{06C5E10D-303D-4C61-806A-C8F190B68027}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MigrateConfig", "src\MigrateConfig\MigrateConfig.csproj", "{04A70705-D9A6-423B-9F11-E7421F8FFC56}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{44538B52-C727-46D9-A6DB-72E2049812A7}"
+	ProjectSection(SolutionItems) = preProject
+		INFO = INFO
+		License.txt = License.txt
+		README.markdown = README.markdown
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
