@@ -1,3 +1,9 @@
+We use GO from thoughtworks as our build agent, and whilst it is fully compatable with Cruse control we have been having issues with authenticating the session.
+This fork is to fix some of these issues with authenticating the connection to the build server.
+
+------------------------------
+# Original README
+
 Cradiator's issue management is still at <http://cradiator.codeplex.com/> (wiki, discussion)  
 Cradiator now lives on GitHub (source code)
 
