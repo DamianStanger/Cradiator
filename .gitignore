@@ -8,3 +8,7 @@ obj
 *.exe
 *.pdb
 patches
+*.ncrunch*
+
+#vs2013 generated files
+README.html

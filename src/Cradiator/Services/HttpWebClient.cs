@@ -12,9 +12,13 @@ namespace Cradiator.Services
 			_webClient = new WebClient();
 		}
 
-		public string DownloadString(string url)
+		public string DownloadString(string url, string userName, string password)
 		{
-			return _webClient.DownloadString(new Uri(url));
+            if (!string.IsNullOrEmpty(userName) || !string.IsNullOrEmpty(password))
+            {
+                _webClient.Credentials = new NetworkCredential(userName, password);
+            } 
+            return _webClient.DownloadString(new Uri(url));
 		}
 	}
 }

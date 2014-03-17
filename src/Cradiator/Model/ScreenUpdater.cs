@@ -86,21 +86,13 @@ namespace Cradiator.Model
             try
             {
                 var xmlResults = e.Result as IEnumerable<string>;
-                IEnumerable<ProjectStatus> projectData = new List<ProjectStatus>();
+                var projectData = new List<ProjectStatus>();
                 if (xmlResults != null)
                 {
-                    projectData = xmlResults.SelectMany(xml =>
+                    foreach (var result in xmlResults)
                     {
-                        try
-                        {
-                            return _transformer.Transform(xml);
-                        }
-                        catch (Exception exception)
-                        {
-                            _log.Error(exception);
-                            return new List<ProjectStatus>();
-                        }
-                    });
+                        projectData.AddRange(_transformer.Transform(result));
+                    }                   
                 }
 
                 _view.DataContext = new ViewModels.ViewDataViewModel(_viewSettings, projectData);

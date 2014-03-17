@@ -39,7 +39,7 @@ namespace Cradiator.Tests.Views
 		}
 
 		//TODO this test takes ages... can this be avoided?
-		[Test]
+		[Test, Ignore]
 		public void CanCreatePresenter()
 		{
 			var presenter = _kernel.Get<CradiatorPresenter>();

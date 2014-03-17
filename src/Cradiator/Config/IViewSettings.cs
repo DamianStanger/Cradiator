@@ -8,6 +8,8 @@ namespace Cradiator.Config
     public interface IViewSettings
     {
         string URL { get; set; }
+        string BuildAgentUsername { get; set; }
+        string BuildAgentPassword { get; set; }
         string SkinName { get; set; }
         string ProjectNameRegEx { get; set; }
         string CategoryRegEx { get; set; }

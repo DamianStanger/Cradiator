@@ -5,7 +5,7 @@
     <DataTemplate x:Key="SkinTemplate">
         <Border BorderBrush="Black" BorderThickness="0.5">
             <StackPanel Orientation="Vertical">
-                <TextBlock Padding="1" TextAlignment="Center" FontFamily="Tahoma">
+                <TextBlock Padding="1" TextAlignment="left" FontFamily="consolas">
                 
                 <TextBlock.Text>
                     <MultiBinding Converter="{Converters:BuildNameToMessageConverter}">

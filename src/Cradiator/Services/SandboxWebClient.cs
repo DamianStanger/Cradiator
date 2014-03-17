@@ -11,11 +11,12 @@ namespace Cradiator.Services
 		/// It's used to test/play without having to connect to a real web service
 		/// </summary>
 		/// <param name="uri">ignored in this implementation</param>
-		public string DownloadString(string url)
+		public string DownloadString(string url, string userName, string password)
 		{
 			using (var streamReader = new StreamReader("DummyProjectStatus.xml"))
 			{
-				return streamReader.ReadToEnd();
+			    var dummyXml = streamReader.ReadToEnd();
+			    return dummyXml;
 			}
 		}
 	}

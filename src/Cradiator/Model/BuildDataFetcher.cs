@@ -10,6 +10,8 @@ namespace Cradiator.Model
 	public class BuildDataFetcher : IConfigObserver
 	{
 		readonly ViewUrl _viewUrl;
+	    private string buildUsername;
+	    private string buildPassword;
 		readonly IWebClientFactory _webClientFactory;
 		IWebClient _webClient;
 
@@ -19,27 +21,26 @@ namespace Cradiator.Model
 			_viewUrl = viewUrl;
 			_webClientFactory = webClientFactory;
 			_webClient = webClientFactory.GetWebClient(configSettings.URL);
+		    buildUsername = configSettings.BuildAgentUsername;
+		    buildPassword = configSettings.BuildAgentPassword;
 			configSettings.AddObserver(this);
 		}
 
 		public IEnumerable<string> Fetch()
 		{
-			return _viewUrl.UriList.Select(url =>
-			{
-			    try
-			    {
-			    	return _webClient.DownloadString(url);
-			    }
-			    catch (WebException webException)
-			    {
-					throw new FetchException(url, webException);
-			    }
-			}).ToList();
+		    var enumerable = new List<string>();
+		    foreach (var url in _viewUrl.UriList)
+		    {
+                enumerable.Add(_webClient.DownloadString(url, buildUsername, buildPassword));
+		    }
+		    return enumerable;
 		}
 
-		public void ConfigUpdated(ConfigSettings newSettings)
+	    public void ConfigUpdated(ConfigSettings newSettings)
 		{
 			_viewUrl.Url = newSettings.URL;
+		    buildUsername = newSettings.BuildAgentUsername;
+		    buildPassword = newSettings.BuildAgentPassword;
 			_webClient = _webClientFactory.GetWebClient(newSettings.URL);
 		}
 	}

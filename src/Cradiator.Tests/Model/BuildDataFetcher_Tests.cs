@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Cradiator.Config;
 using Cradiator.Model;
@@ -26,50 +27,57 @@ namespace Cradiator.Tests.Model
 		[Test]
 		public void CanFetch()
 		{
-			const string Hello = "hello";
+		    const string Hello = "hello";
+		    _webClient.Expect(w => w.DownloadString(Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything)).Return(Hello);
 
-			_webClient.Expect(w => w.DownloadString(Arg<string>.Is.Anything)).Return(Hello);
+		    var configSettings = new ConfigSettings {BuildAgentUsername = "buildAgentuser", BuildAgentPassword = "password"};
+		    var fetcher = new BuildDataFetcher(new ViewUrl("http://test"), configSettings, _webClientFactory);
+		    var fetchValue = fetcher.Fetch();
 
-			var fetcher = new BuildDataFetcher(new ViewUrl("http://test"), new ConfigSettings(), _webClientFactory);
-			var fetchValue = fetcher.Fetch();
-
-			fetchValue.First().ShouldBe(Hello);
+		    fetchValue.First().ShouldBe(Hello);
 		}
 
 		[Test]
 		public void CanUpdateSettings()
 		{
-			var fetcher = new BuildDataFetcher(new ViewUrl("http://bla"), 
-				new ConfigSettings
+            _webClient.Expect(w => w.DownloadString(Arg<string>.Is.Equal("http://bla"), Arg<string>.Is.Equal("buildAgentuser"), Arg<string>.Is.Equal("password"))).Return("CanUpdateSettings1").Repeat.Once();
+            _webClient.Expect(w => w.DownloadString(Arg<string>.Is.Equal("http://new"), Arg<string>.Is.Equal("buildAgentuser1"), Arg<string>.Is.Equal("password2"))).Return("CanUpdateSettings2").Repeat.Once();
+
+			var fetcher = new BuildDataFetcher(new ViewUrl("http://bla"), new ConfigSettings
 				{
-					URL = "http://bla"
-				}, _webClientFactory);
+					URL = "http://bla",
+                    BuildAgentUsername = "buildAgentuser",
+                    BuildAgentPassword = "password"
+				}, 
+                _webClientFactory);
 
-			fetcher.Fetch();
-			_webClient.AssertWasCalled(w => w.DownloadString(Arg<string>.Is.Equal(new Uri("http://bla"))), w => w.Repeat.Once());
+		    IEnumerable<string> results = fetcher.Fetch();
+            results.ToList()[0].ShouldBe("CanUpdateSettings1");
 
-			fetcher.ConfigUpdated(new ConfigSettings { URL = "http://new"});
-			fetcher.Fetch();
-			_webClient.AssertWasCalled(w => w.DownloadString(Arg<string>.Is.Equal(new Uri("http://new"))), w => w.Repeat.Once());
+            fetcher.ConfigUpdated(new ConfigSettings
+            {
+                URL = "http://new",
+                BuildAgentUsername = "buildAgentuser1",
+                BuildAgentPassword = "password2"
+            });
+		    IEnumerable<string> enumerable = fetcher.Fetch();
+            enumerable.ToList()[0].ShouldBe("CanUpdateSettings2");
 		}
 
 		[Test]
 		public void can_fetch_multiple_urls()
 		{
-			_webClient.Expect(w => w.DownloadString(Arg<string>.Is.Anything)).Return("url1").Repeat.Once();
-			_webClient.Expect(w => w.DownloadString(Arg<string>.Is.Anything)).Return("url2").Repeat.Once();
+            _webClient.Expect(w => w.DownloadString(Arg<string>.Is.Equal("http://url1"), Arg<string>.Is.Equal("buildAgentuser"), Arg<string>.Is.Equal("password"))).Return("url1").Repeat.Once();
+            _webClient.Expect(w => w.DownloadString(Arg<string>.Is.Equal("http://url2"), Arg<string>.Is.Equal("buildAgentuser"), Arg<string>.Is.Equal("password"))).Return("url2").Repeat.Once();
 
-			var fetcher = new BuildDataFetcher(new ViewUrl("http://url1 http://url2"), 
-				new ConfigSettings(), _webClientFactory);
+			var fetcher = new BuildDataFetcher(new ViewUrl("http://url1 http://url2"), new ConfigSettings(){BuildAgentUsername = "buildAgentuser", BuildAgentPassword = "password"}, _webClientFactory);
 
 			var xmlResults = fetcher.Fetch().ToList();
 
 			xmlResults.Count.ShouldBe(2);
 			xmlResults[0].ShouldBe("url1");
 			xmlResults[1].ShouldBe("url2");
-
-			_webClient.AssertWasCalled(w => w.DownloadString(Arg<string>.Is.Equal(new Uri("http://url1"))));
-			_webClient.AssertWasCalled(w => w.DownloadString(Arg<string>.Is.Equal(new Uri("http://url2"))));
 		}
+
 	}
 }

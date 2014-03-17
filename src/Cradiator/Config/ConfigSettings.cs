@@ -22,12 +22,13 @@ namespace Cradiator.Config
 		ICollection<ViewSettings> _viewList = new List<ViewSettings>();
 		readonly Queue<ViewSettings> _viewQueue = new Queue<ViewSettings>();
 
-		public void Load()
+	    public void Load()
 		{
 			LoadViewSettings();
 			ApplyViewSettings();
 
 			var config = OpenExeConfiguration();
+
 			PollFrequency = config.GetIntProperty(PollFrequencyKey, DefaultPollingFrequency);
 			ShowCountdown = config.GetBoolProperty(ShowCountdownKey);
 			ShowProgress = config.GetBoolProperty(ShowProgressKey);
@@ -52,6 +53,8 @@ namespace Cradiator.Config
 					ViewSettingsParser.Modify(_configLocation.FileName, new ViewSettings
 					{
 						URL = URL,
+                        BuildAgentUsername = BuildAgentUsername,
+                        BuildAgentPassword = BuildAgentPassword,
 						ProjectNameRegEx = ProjectNameRegEx,
 						CategoryRegEx = CategoryRegEx,
 						ServerNameRegEx = ServerNameRegEx,
@@ -106,6 +109,8 @@ namespace Cradiator.Config
 
 			var q = _viewQueue.Dequeue();
 			URL = q.URL;
+		    BuildAgentUsername = q.BuildAgentUsername;
+		    BuildAgentPassword = q.BuildAgentPassword;
 			SkinName = q.SkinName;
 			ProjectNameRegEx = q.ProjectNameRegEx;
 			CategoryRegEx = q.CategoryRegEx;

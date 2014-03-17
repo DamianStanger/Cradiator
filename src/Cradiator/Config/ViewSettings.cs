@@ -17,6 +17,30 @@ namespace Cradiator.Config
             }
         }
 
+        protected string _buildAgentUsername;
+        public string BuildAgentUsername
+        {
+            get { return _buildAgentUsername; }
+            set
+            {
+                if (_buildAgentUsername == value) return;
+                _buildAgentUsername = value;
+                Notify("BuildAgentUsername");
+            }
+        }
+
+        protected string _buildAgentPassword;
+        public string BuildAgentPassword
+        {
+            get { return _buildAgentPassword; }
+            set
+            {
+                if (_buildAgentPassword == value) return;
+                _buildAgentPassword = value;
+                Notify("BuildAgentPassword");
+            }
+        }
+
         protected string _skinName;
         public string SkinName
         {

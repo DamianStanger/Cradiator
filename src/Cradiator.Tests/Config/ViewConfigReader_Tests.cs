@@ -14,9 +14,17 @@ namespace Cradiator.Tests.Config
         const string XML = "<configuration>" +
                                 "<views>" +
                                     @"<view url=""http://url1"" " +
+                                        @"build-agent-username=""foogo"" " +
+                                        @"build-agent-password=""Bargo"" " +
                                         @"skin=""Grid"" " +
                                         @"project-regex=""v5.*"" " +
-                                        @"category-regex="".*""/>"" " +
+                                        @"category-regex="".*"" " +
+                                        @"server-regex="".*"" " +
+                                        @"name=""Scoring"" " +
+                                        @"showOnlyBroken=""false"" " +
+                                        @"showServerName=""false"" " +
+                                        @"showOutOfDate=""false"" " +
+                                        @"outOfDateDifferenceInMinutes=""0"" />" +
                                 "</views>" +
                             "</configuration>";
 
@@ -35,6 +43,8 @@ namespace Cradiator.Tests.Config
             var view1 = views.First();
 
             view1.URL.ShouldBe("http://url1");
+            view1.BuildAgentUsername.ShouldBe("foogo");
+            view1.BuildAgentPassword.ShouldBe("Bargo");
             view1.SkinName.ShouldBe("Grid");
             view1.ProjectNameRegEx.ShouldBe("v5.*");
             view1.CategoryRegEx.ShouldBe(".*");
@@ -47,9 +57,17 @@ namespace Cradiator.Tests.Config
             var xmlModified = _parser.CreateUpdatedXml(new ViewSettings
                               {
                                 URL = "http://new",
+                                BuildAgentUsername = "go",
+                                BuildAgentPassword = "foo",
                                 ProjectNameRegEx = "[a-z]",  
                                 CategoryRegEx = "[1-9]",  
                                 SkinName = "StackPhoto",  
+                                ServerNameRegEx = "",
+                                OutOfDateDifferenceInMinutes = 1,
+                                ShowOnlyBroken = true,
+                                ShowOutOfDate = true,
+                                ShowServerName = true,
+                                ViewName = "foobar"
                               });
 
             _parser = new ViewSettingsParser(new StringReader(xmlModified));
@@ -58,6 +76,8 @@ namespace Cradiator.Tests.Config
             var view1 = views.First();
 
             view1.URL.ShouldBe("http://new");
+            view1.BuildAgentUsername.ShouldBe("go");
+            view1.BuildAgentPassword.ShouldBe("foo");
             view1.SkinName.ShouldBe("StackPhoto");
             view1.ProjectNameRegEx.ShouldBe("[a-z]");
             view1.CategoryRegEx.ShouldBe("[1-9]");
