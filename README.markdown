@@ -1,5 +1,11 @@
-We use GO from thoughtworks as our build agent, and whilst it is fully compatable with Cruse control we have been having issues with authenticating the session.
-This fork is to fix some of these issues with authenticating the connection to the build server.
+We use Go from thoughtworks as our build agent, and whilst it is fully compatable with Cruse control we have been having issues with authenticating the session. This fork is to fix some of these issues with authenticating the connection to the build server.
+
+Ive written a breif blog at https://foldingair.blogspot.com that describes the project from my perspective.
+
+Ive added the following to the config:
+__build-agent-username__ - the user to authenticate with
+__build-agent-password__ - the password for the user above
+* If either of these properties have values, the download of the xml will attempt to authenticate the user
 
 ------------------------------
 # Original README
