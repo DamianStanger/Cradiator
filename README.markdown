@@ -1,6 +1,6 @@
 We use Go from thoughtworks as our build agent, and whilst it is fully compatable with Cruse control we have been having issues with authenticating the session. This fork is to fix some of these issues with authenticating the connection to the build server.
 
-Ive written a breif blog at https://foldingair.blogspot.com/tobepublished that describes the project from my perspective.
+Ive written a breif blog at http://foldingair.blogspot.co.uk/2014/03/visualising-thoughtworks-go-pipline.html that describes the project from my perspective.
 
 Ive added the following to the config:
 __build-agent-username__ - the user to authenticate with
